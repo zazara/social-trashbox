@@ -2,6 +2,7 @@ package item
 
 import (
 	"log"
+	"text/template"
 
 	"github.com/jinzhu/gorm"
 )
@@ -14,13 +15,13 @@ const (
 
 type Item struct {
 	gorm.Model
-	Type     int
-	Text     string
-	FilePath string
+	Type     int    `json:"type"`
+	Text     string `json:"text"`
+	FilePath string `json:"filepath"`
 }
 
 func DBInit() {
-	db, err := gorm.Open("sqlite3", "item.sqlite3")
+	db, err := gorm.Open("sqlite3", "items.sqlite3")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,20 +30,27 @@ func DBInit() {
 }
 
 func InsertTextItem(itemType int, itemText string) {
-	db, err := gorm.Open("sqlite3", "item.sqlite3")
+	escapedText := template.HTMLEscapeString(itemText)
+	db, err := gorm.Open("sqlite3", "items.sqlite3")
 	if err != nil {
 		log.Fatal(err)
+	} else {
+		for {
+			if err := db.Create(&Item{Type: itemType, Text: escapedText}).Error; err == nil {
+				break
+			}
+		}
 	}
-	db.Create(&Item{Type: itemType, Text: itemText})
 	defer db.Close()
 }
 
 func GetItems() []Item {
-	db, err := gorm.Open("sqlite3", "item.sqlite3")
+	db, err := gorm.Open("sqlite3", "items.sqlite3")
 	if err != nil {
 		log.Fatal(err)
 	}
 	var items []Item
 	db.Find(&items)
+	defer db.Close()
 	return items
 }

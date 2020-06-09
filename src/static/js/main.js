@@ -1,3 +1,10 @@
+function onClearButtonClick(){
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST','http://localhost:8080/clear');
+    xhr.onload = function(e) { };
+    xhr.send();
+}
+
 window.onload = function() {
     let dropArea = document.getElementById('droparea');
 
@@ -16,15 +23,28 @@ window.onload = function() {
                 formData.append('input_text',inputText);
                 let xhr = new XMLHttpRequest();
                 xhr.open('POST','http://localhost:8080/upload_text');
-                //xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
                 xhr.onload = function(e) { };
 
-                xhr.send(formData)
+                xhr.send(formData);
             }else{
-                console.log("不明な入力")
+                console.log("不明な入力");
             }
         }
-        let files = event.dataTransfer.files;
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET','http://localhost:8080/items',true);
+        xhr.onload = function(e) { 
+            //console.log(xhr.response);
+            let responseItems = xhr.response["items"];
+            console.log(responseItems);
+            for(let i = 0;i<responseItems.length;i++){
+                stage.addChild(createDynamicText(stageWidth/2+(Math.random()-0.5)*200,stageHeight/2-i*100,responseItems[i]["text"]));
+            }
+        };
+        xhr.onerror = function (e) {
+            console.error(xhr.statusText);
+          };
+        xhr.responseType = 'json';
+        xhr.send(null);
     });
 
     dropArea.addEventListener('dragover',function(event){

@@ -27,8 +27,11 @@ func main() {
 	router.POST("/upload_text", func(ctx *gin.Context) {
 		fmt.Print("きた\n")
 		fmt.Println(ctx.PostForm("input_text"))
+		item.InsertTextItem(item.Text, ctx.PostForm("input_text"))
+		items := item.GetItems()
+		displayItems(items)
 	})
-	item.InsertTextItem(item.Text, "はじめまして")
+
 	items := item.GetItems()
 	displayItems(items)
 	router.Run()
