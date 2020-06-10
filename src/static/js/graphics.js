@@ -49,8 +49,15 @@ function initializeBox2D(gravity, stageWidth, stageHeight) {
   world = new Box2D.Dynamics.b2World(gravity,true);
   let textShape = createDynamicText(stageWidth/2,stageHeight/2+50,"test");
   stage.addChild(textShape);
-  let floorShape = createStaticFloor(stageWidth / 2, stageHeight - standardRadius, floor.width, standardRadius, "#CCCCCC");
+  let floorShape = createStaticFloor(stageWidth / 2, stageHeight + standardRadius, stageWidth, standardRadius, "#CCCCCC");
   stage.addChild(floorShape);
+  // createStaticWall(0-(standardRadius/2), stageHeight/2, standardRadius,  stageHeight/2 );
+  // createStaticWall(stageWidth-(standardRadius/2), 0, standardRadius,  stageHeight );
+  // createStaticWall(0, 0, standardRadius,  stageHeight );
+  let floorShape1 = createStaticFloor(0 - standardRadius, stageHeight / 2,  standardRadius, stageHeight,"#CCCCCC");
+  stage.addChild(floorShape1);
+  let floorShape2 = createStaticFloor(stageWidth +  standardRadius, stageHeight / 2,  standardRadius, stageHeight,"#CCCCCC");
+  stage.addChild(floorShape2);
 }
 
 // 定期的に呼び出される関数
@@ -91,6 +98,15 @@ function createStaticFloor(nX, nY, nWidth, nHeight, color) {
   boxShape.SetAsBox(nWidth / 2 * SCALE, nHeight / 2 * SCALE);
   createBody(world, bodyDef, fixtureDef);
   return floorShape;
+}
+
+function createStaticWall(nX, nY, nWidth, nHeight) {
+  let staticBody = Box2D.Dynamics.b2Body.b2_staticBody;
+  let bodyDef = defineBody(nX,nY,staticBody);
+  let boxShape = new Box2D.Collision.Shapes.b2PolygonShape();
+  let fixtureDef = defineFixture(boxShape);
+  boxShape.SetAsBox(nWidth / 2 * SCALE, nHeight / 2 * SCALE);
+  createBody(world, bodyDef, fixtureDef);
 }
 
 function createVisualFloor(nWidth,nHeight,color,bodyDef){
@@ -162,4 +178,9 @@ function update(delta) {
   }
   body = body.GetNext();
 }
+}
+
+function clearWorld(){
+  world.ClearForces();
+  stage.removeAllChildren();
 }

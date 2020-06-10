@@ -54,3 +54,13 @@ func GetItems() []Item {
 	defer db.Close()
 	return items
 }
+
+func DeleteItems() {
+	db, err := gorm.Open("sqlite3", "items.sqlite3")
+	if err != nil {
+		log.Fatal(err)
+	}
+	var items []Item
+	db.Delete(&items)
+	defer db.Close()
+}

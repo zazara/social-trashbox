@@ -32,6 +32,10 @@ func main() {
 		displayItems(items)
 	})
 
+	router.POST("/clear", func(ctx *gin.Context) {
+		item.DeleteItems()
+	})
+
 	items := item.GetItems()
 	displayItems(items)
 	router.Run()

@@ -6,18 +6,40 @@
     <script type="text/javascript" src="./static/js/lib/Box2D.js"></script>
     <script type="text/javascript" src="./static/js/main.js"></script>
     <script type="text/javascript" src="./static/js/graphics.js"></script>
+    <link rel="stylesheet" href="./static/bootflat.github.io/css/site.min.css">
 </head>
 <style>
 .myCanvas{
   background-color: azure;
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
+.body{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+#droparea{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
 
   </style>
-<body>
-<input type="button" value="CLEAR" onclick="onClearButtonClick();"/>
-<div id="droparea">Drog files here!</div>
-<canvas id="myCanvas" class="myCanvas" ></canvas>
+  <body id="droparea">
+    
+    <canvas id="myCanvas" class="myCanvas" ></canvas>
+<section class="body">
+  <button type="button" class="btn btn-primary btn-clock" onclick="onClearButtonClick();">ゴミ箱を空にする</button>
+</section>
+
+</section>
 </body>
 </html>
-
