@@ -13,6 +13,28 @@ var imageRadius;
 var standardRadius = 20;
 var floor = new createjs.Rectangle();
 
+function setWrapText(textInstance, text) {
+  var initWidth = textInstance.lineWidth;
+  var textArray = text.split('');
+  var i = -1;
+  var prevText = '';
+  var lines = [];
+
+  textInstance.text = '';
+
+  while (textArray[++i]) {
+    textInstance.text += textArray[i];
+
+    if (textInstance.getMeasuredWidth() > initWidth) {
+      lines.push(prevText);
+      textInstance.text = textArray[i];
+    }
+    prevText = textInstance.text;
+  }
+
+  textInstance.text = lines.join('\n');
+}
+
 function init() {
   let gravity = new Box2D.Common.Math.b2Vec2(0, gravityVertical);
   // Stageオブジェクトを作成します
@@ -54,10 +76,10 @@ function initializeBox2D(gravity, stageWidth, stageHeight) {
   // createStaticWall(0-(standardRadius/2), stageHeight/2, standardRadius,  stageHeight/2 );
   // createStaticWall(stageWidth-(standardRadius/2), 0, standardRadius,  stageHeight );
   // createStaticWall(0, 0, standardRadius,  stageHeight );
-  let floorShape1 = createStaticFloor(0 - standardRadius, stageHeight / 2,  standardRadius, stageHeight,"#CCCCCC");
-  stage.addChild(floorShape1);
-  let floorShape2 = createStaticFloor(stageWidth +  standardRadius, stageHeight / 2,  standardRadius, stageHeight,"#CCCCCC");
-  stage.addChild(floorShape2);
+  // let floorShape1 = createStaticFloor(0 - standardRadius, stageHeight / 2,  standardRadius, stageHeight,"#CCCCCC");
+  // stage.addChild(floorShape1);
+  // let floorShape2 = createStaticFloor(stageWidth +  standardRadius, stageHeight / 2,  standardRadius, stageHeight,"#CCCCCC");
+  // stage.addChild(floorShape2);
 }
 
 // 定期的に呼び出される関数
@@ -121,7 +143,11 @@ function createVisualFloor(nWidth,nHeight,color,bodyDef){
 }
 
 function createVisualText(text,bodyDef){
-  let textShape = new createjs.Text(text, "24px serif", "DarkRed");
+  let textShape = new createjs.Text();
+  textShape.font =  "24px serif";
+  textShape.lineWidth = 100;
+  textShape.text = text;
+  //setWrapText(textShape,text);
   textShape.regX = textShape.getMeasuredWidth()/2;
   textShape.regY = textShape.getMeasuredHeight()/2
   bodyDef.userData = textShape;
